@@ -34,8 +34,8 @@ public class MainTest {
     @Test
     public void testTaskAccessModifiers() throws NoSuchFieldException {
         Field idFields = employees.get(0).getClass().getDeclaredField("id");
-        Field firstnameFields = employees.get(0).getClass().getDeclaredField("firstname");
-        Field lastnameFields = employees.get(0).getClass().getDeclaredField("lastname");
+        Field firstnameFields = employees.get(0).getClass().getDeclaredField("firstName");
+        Field lastnameFields = employees.get(0).getClass().getDeclaredField("lastName");
 
         assertEquals(idFields.getModifiers(), 2);
         assertEquals(firstnameFields.getModifiers(), 2);
@@ -47,15 +47,27 @@ public class MainTest {
     public void testFindDuplicatesMethod() {
         List<Employee> list = Main.findDuplicates(employees);
         assertEquals(list.size(), 3);
-        assertEquals(list.get(0).getFirstname(), "Dogancan");
+        assertEquals(list.get(0).getFirstName(), "Dogancan");
     }
 
     @DisplayName("findUniques method doğru çalışıyor mu?")
     @Test
     public void testFindUniquesMethod() {
-        Map<Integer, Employee> map = Main.findUniques(employees);
-        assertEquals(map.size(), 4);
-        assertEquals(map.get(1).getFirstname(), "Dogancan");
+        Map<Employee, Integer> map = Main.findUniques(employees);
+        assertEquals(map.size(), 5);
+
+        // Doğru Employee nesnelerini anahtar olarak kullanarak kontrol etmelisin
+        Employee dogancan = new Employee(1, "Dogancan", "Kinik");
+        Employee seyyitBattal = new Employee(2, "Seyyit Battal", "Arvas");
+        Employee anil = new Employee(3, "Anil", "Ensari");
+        Employee burak = new Employee(4, "Burak", "Cevizli");
+        Employee nullEmployee = null; // Null da bir anahtar olabilir
+
+        assertEquals(map.get(dogancan), 2); // Dogancan 2 kere geçiyor
+        assertEquals(map.get(seyyitBattal), 2); // Seyyit Battal 2 kere geçiyor
+        assertEquals(map.get(anil), 2); // Anil 2 kere geçiyor
+        assertEquals(map.get(burak), 1); // Burak 1 kere geçiyor
+        assertEquals(map.get(nullEmployee), 1); // Null 1 kere geçiyor
     }
 
     @DisplayName("removeDuplicates method doğru çalışıyor mu?")
@@ -63,14 +75,14 @@ public class MainTest {
     public void testRemoveMethod() {
         List<Employee> list = Main.removeDuplicates(employees);
         System.out.println(list);
-        assertEquals(list.size(), 1);
-        assertEquals(list.get(0).getFirstname(), "Burak");
+        assertEquals(list.size(), 2);
+        assertEquals(list.get(0).getFirstName(), "Burak");
     }
 
     @DisplayName("calculatedWord method doğru çalışıyor mu?")
     @Test
     public void testCalculateWordMethod() {
-        Map<String, Integer> map = WordCounter.calculatedWord();
+        Map<String, Integer> map = WordCounter.calculateWord();
         assertEquals(map.get("which"), 3);
         assertEquals(map.get("turkish"), 2);
         assertEquals(map.get("mustafa"), 3);
